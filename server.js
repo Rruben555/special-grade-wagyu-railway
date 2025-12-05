@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+
+// Load env FIRST
+dotenv.config();
+
 import { sequelize } from "./src/models/index.js";
 
 // Routes
@@ -11,16 +15,16 @@ import weaponRoutes from "./src/routes/weaponRoutes.js";
 import postRoutes from "./src/routes/postRoutes.js";
 import commentRoutes from "./src/routes/commentRoutes.js";
 
-dotenv.config();
-
 const app = express();
 
-// CORS — hanya lokal + railway
+console.log("DEBUG: DATABASE_URL =", process.env.DATABASE_URL); // 🔥 Debug penting
+
+// CORS
 const allowedOrigins = [
-  "http://localhost:3000",  // React dev
+  "http://localhost:3000",
   "http://localhost:8080",
-  "http://localhost:5173",  // Vite dev
-  process.env.FRONTEND_URL, // kalau nanti deploy frontend ke vercel
+  "http://localhost:5173",
+  process.env.FRONTEND_URL,
 ];
 
 const corsOptions = {
@@ -38,7 +42,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Register Routes
+// ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api/characters", characterRoutes);
 app.use("/api/weapons", weaponRoutes);

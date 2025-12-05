@@ -9,7 +9,9 @@ import commentModel from "./comment.js";
 
 dotenv.config();
 
-// HAPUS 'export' di sini; Gunakan const untuk definisi utama
+console.log("DEBUG (models): DATABASE_URL =", process.env.DATABASE_URL); // 🔥 Debug
+
+// Init Sequelize using DATABASE_URL
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   logging: false,
@@ -21,14 +23,14 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   },
 });
 
-// INIT MODELS (HAPUS SEMUA 'export' di sini)
+// Init models
 const User = userModel(sequelize, DataTypes);
 const Character = characterModel(sequelize, DataTypes);
 const Weapon = weaponModel(sequelize, DataTypes);
 const Post = postModel(sequelize, DataTypes);
 const Comment = commentModel(sequelize, DataTypes);
 
-// RELATIONS
+// RELATIONSHIPS
 User.hasMany(Post, { foreignKey: "user_id" });
 Post.belongsTo(User, { foreignKey: "user_id" });
 
@@ -38,24 +40,20 @@ Comment.belongsTo(User, { foreignKey: "user_id" });
 Post.hasMany(Comment, { foreignKey: "post_id", onDelete: "CASCADE" });
 Comment.belongsTo(Post, { foreignKey: "post_id" });
 
-
-// 🔥 EKSPOR AKHIR: Satu blok untuk Named Export, satu untuk Default Export
-// Ini memungkinkan import { Post } dari file lain
 export {
-    sequelize,
-    User,
-    Character,
-    Weapon,
-    Post,
-    Comment
+  sequelize,
+  User,
+  Character,
+  Weapon,
+  Post,
+  Comment,
 };
 
-// Ini memungkinkan import db from "..." di file route (seperti postRoutes.js)
 export default {
-    sequelize,
-    User,
-    Character,
-    Weapon,
-    Post,
-    Comment,
+  sequelize,
+  User,
+  Character,
+  Weapon,
+  Post,
+  Comment,
 };
