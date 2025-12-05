@@ -7,42 +7,40 @@ import weaponModel from "./weapon.js";
 import postModel from "./post.js";
 import commentModel from "./comment.js";
 
-// Hapus dotenv.config() di sini
+dotenv.config();
 
-// 🔥 PERBAIKAN UTAMA: Gunakan DATABASE_URL dan HAPUS konfigurasi SSL
-// DATABASE_URL adalah variabel yang disediakan otomatis oleh Railway
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: "postgres",
-  logging: false,
-  // Hapus dialectOptions SSL yang menyebabkan ECONNREFUSED di koneksi internal Railway
-});
+export const sequelize = new Sequelize(
+  process.env.PG_DATABASE,
+  process.env.PG_USER,
+  process.env.PG_PASSWORD,
+  {
+    host: process.env.PG_HOST,
+    dialect: "postgres",
+    logging: false,
+  }
+);
 
-// INIT MODELS (Gunakan const, HAPUS 'export' di sini)
-const User = userModel(sequelize, DataTypes);
-const Character = characterModel(sequelize, DataTypes);
-const Weapon = weaponModel(sequelize, DataTypes);
-const Post = postModel(sequelize, DataTypes);
-const Comment = commentModel(sequelize, DataTypes);
+export const User = userModel(sequelize, DataTypes);
+export const Character = characterModel(sequelize, DataTypes);
+export const Weapon = weaponModel(sequelize, DataTypes);
+export const Post = postModel(sequelize, DataTypes);
+export const Comment = commentModel(sequelize, DataTypes);
 
-// RELATIONSHIPS
+// ---- User ↔ Post ----
 User.hasMany(Post, { foreignKey: "user_id" });
 Post.belongsTo(User, { foreignKey: "user_id" });
 
+// ---- User ↔ Comment ----
 User.hasMany(Comment, { foreignKey: "user_id" });
 Comment.belongsTo(User, { foreignKey: "user_id" });
 
-Post.hasMany(Comment, { foreignKey: "post_id", onDelete: "CASCADE" });
+// ---- Post ↔ Comment ----
+Post.hasMany(Comment, {
+  foreignKey: "post_id",
+  onDelete: "CASCADE"
+});
 Comment.belongsTo(Post, { foreignKey: "post_id" });
 
-// EKSPOR AKHIR
-export {
-  sequelize,
-  User,
-  Character,
-  Weapon,
-  Post,
-  Comment,
-};
 
 export default {
   sequelize,
