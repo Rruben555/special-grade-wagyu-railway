@@ -1,4 +1,3 @@
-// src/models/index.js
 import { Sequelize, DataTypes } from "sequelize";
 import dotenv from "dotenv";
 
@@ -10,7 +9,7 @@ import commentModel from "./comment.js";
 
 dotenv.config();
 
-// Gunakan DATABASE_URL di Railway
+// Railway pakai DATABASE_URL
 export const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   logging: false,
@@ -39,12 +38,5 @@ Comment.belongsTo(User, { foreignKey: "user_id" });
 Post.hasMany(Comment, { foreignKey: "post_id", onDelete: "CASCADE" });
 Comment.belongsTo(Post, { foreignKey: "post_id" });
 
-// EXPORT SEMUA (JANGAN ADA default)
-export {
-  sequelize,
-  User,
-  Character,
-  Weapon,
-  Post,
-  Comment,
-};
+// ❗ EXPORT NAMED ONLY (tidak ada default)
+export { sequelize, User, Character, Weapon, Post, Comment };
