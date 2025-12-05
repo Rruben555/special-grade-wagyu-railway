@@ -18,7 +18,7 @@ const app = express();
 // CORS — hanya lokal + railway
 const allowedOrigins = [
   "http://localhost:3000",  // React dev
-  "http://localhost:4000",
+  "http://localhost:8080",
   "http://localhost:5173",  // Vite dev
   process.env.FRONTEND_URL, // kalau nanti deploy frontend ke vercel
 ];
@@ -45,7 +45,7 @@ app.use("/api/weapons", weaponRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, async () => {
   try {
