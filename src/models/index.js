@@ -38,13 +38,3 @@ Comment.belongsTo(User, { foreignKey: "user_id" });
 Post.hasMany(Comment, { foreignKey: "post_id", onDelete: "CASCADE" });
 Comment.belongsTo(Post, { foreignKey: "post_id" });
 
-// ❗ EXPORT NAMED ONLY (tidak ada default)
-export {
-  sequelize,
-  User,
-  Character,
-  Weapon,
-  Post,
-  Comment
-};
-
