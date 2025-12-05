@@ -7,23 +7,27 @@ import weaponModel from "./weapon.js";
 import postModel from "./post.js";
 import commentModel from "./comment.js";
 
-dotenv.config();
+// Hapus dotenv.config() di sini, karena sudah ada di server.js
 
-console.log("DEBUG (models): DATABASE_URL =", process.env.DATABASE_URL); // 🔥 Debug
-
-// Init Sequelize using DATABASE_URL
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: "postgres",
-  logging: false,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
+// Init Sequelize menggunakan variabel terpisah (PG_HOST, dll.)
+const sequelize = new Sequelize(
+  process.env.PG_DATABASE,
+  process.env.PG_USER,
+  process.env.PG_PASSWORD,
+  {
+    host: process.env.PG_HOST, // 🔥 Menggunakan PG_HOST
+    dialect: "postgres",
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
-  },
-});
+  }
+);
 
-// Init models
+// INIT MODELS (Gunakan const, HAPUS 'export' di sini)
 const User = userModel(sequelize, DataTypes);
 const Character = characterModel(sequelize, DataTypes);
 const Weapon = weaponModel(sequelize, DataTypes);
@@ -40,6 +44,7 @@ Comment.belongsTo(User, { foreignKey: "user_id" });
 Post.hasMany(Comment, { foreignKey: "post_id", onDelete: "CASCADE" });
 Comment.belongsTo(Post, { foreignKey: "post_id" });
 
+// 🔥 EKSPOR AKHIR (Memperbaiki error duplikasi dan no default export)
 export {
   sequelize,
   User,

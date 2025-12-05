@@ -3,9 +3,10 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 
-// Load env FIRST
+// 🔥 Langkah 1: Panggil dotenv SEGERA SETELAH import modul utilitas
 dotenv.config();
 
+// 🔥 Langkah 2: Import sequelize HANYA SETELAH dotenv.config()
 import { sequelize } from "./src/models/index.js";
 
 // Routes
@@ -17,14 +18,14 @@ import commentRoutes from "./src/routes/commentRoutes.js";
 
 const app = express();
 
-console.log("DEBUG: DATABASE_URL =", process.env.DATABASE_URL); // 🔥 Debug penting
+// console.log("DEBUG: DATABASE_URL =", process.env.DATABASE_URL); // Debug log tidak perlu lagi
 
 // CORS
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:8080",
   "http://localhost:5173",
-  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL, // Ganti ini dengan domain frontend live Anda
 ];
 
 const corsOptions = {
@@ -53,6 +54,7 @@ const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, async () => {
   try {
+    // Koneksi sequelize akan menggunakan variabel PG_HOST dkk.
     await sequelize.authenticate();
     console.log("✅ Connected to PostgreSQL");
 
