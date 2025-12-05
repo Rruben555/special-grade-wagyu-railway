@@ -3,11 +3,11 @@ dotenv.config();
 
 export default {
   development: {
-    username: process.env.PG_USER,
-    password: process.env.PG_PASSWORD,
-    database: process.env.PG_DATABASE,
-    host: process.env.PG_HOST,
+    use_env_variable: "DATABASE_URL",
     dialect: "postgres",
-    logging: false
+    dialectOptions: {
+      ssl: false,
+    },
+    logging: false,
   },
 };

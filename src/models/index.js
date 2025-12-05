@@ -9,17 +9,16 @@ import commentModel from "./comment.js";
 
 dotenv.config();
 
-export const sequelize = new Sequelize(
-  process.env.PG_DATABASE,
-  process.env.PG_USER,
-  process.env.PG_PASSWORD,
-  {
-    host: process.env.PG_HOST,
-    dialect: "postgres",
-    logging: false,
-  }
-);
+// ---- Gunakan DATABASE_URL langsung (Private URL dari Railway) ----
+export const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: false, // ⚠️ Railway private URL tidak pakai SSL
+  },
+  logging: false,
+});
 
+// ---- Models ----
 export const User = userModel(sequelize, DataTypes);
 export const Character = characterModel(sequelize, DataTypes);
 export const Weapon = weaponModel(sequelize, DataTypes);
@@ -37,10 +36,9 @@ Comment.belongsTo(User, { foreignKey: "user_id" });
 // ---- Post ↔ Comment ----
 Post.hasMany(Comment, {
   foreignKey: "post_id",
-  onDelete: "CASCADE"
+  onDelete: "CASCADE",
 });
 Comment.belongsTo(Post, { foreignKey: "post_id" });
-
 
 export default {
   sequelize,
