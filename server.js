@@ -3,58 +3,41 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 
-// 🔥 Langkah 1: Panggil dotenv SEGERA SETELAH import modul utilitas
+// 🔥 Panggil dotenv SEGERA SETELAH import modul utilitas
 dotenv.config();
 
-// 🔥 Langkah 2: Import sequelize HANYA SETELAH dotenv.config()
+// Import sequelize HANYA SETELAH dotenv.config()
 import { sequelize } from "./src/models/index.js";
 
 // Routes
 import authRoutes from "./src/routes/auth.js";
 import characterRoutes from "./src/routes/characterRoutes.js";
-import weaponRoutes from "./src/routes/weaponRoutes.js";
-import postRoutes from "./src/routes/postRoutes.js";
-import commentRoutes from "./src/routes/commentRoutes.js";
+// ... routes lainnya
 
 const app = express();
-
-// console.log("DEBUG: DATABASE_URL =", process.env.DATABASE_URL); // Debug log tidak perlu lagi
 
 // CORS
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:8080",
   "http://localhost:5173",
-  process.env.FRONTEND_URL, // Ganti ini dengan domain frontend live Anda
+  process.env.FRONTEND_URL, 
 ];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
+// ... konfigurasi corsOptions
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ... app.use() lainnya
 
 // ROUTES
 app.use("/api/auth", authRoutes);
-app.use("/api/characters", characterRoutes);
-app.use("/api/weapons", weaponRoutes);
-app.use("/api/posts", postRoutes);
-app.use("/api/comments", commentRoutes);
+// ... routes lainnya
 
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, async () => {
   try {
-    // Koneksi sequelize akan menggunakan variabel PG_HOST dkk.
+    // Koneksi sequelize akan menggunakan DATABASE_URL dari Railway
     await sequelize.authenticate();
     console.log("✅ Connected to PostgreSQL");
 

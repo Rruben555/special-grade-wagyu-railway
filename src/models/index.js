@@ -7,25 +7,15 @@ import weaponModel from "./weapon.js";
 import postModel from "./post.js";
 import commentModel from "./comment.js";
 
-// Hapus dotenv.config() di sini, karena sudah ada di server.js
+// Hapus dotenv.config() di sini
 
-// Init Sequelize menggunakan variabel terpisah (PG_HOST, dll.)
-const sequelize = new Sequelize(
-  process.env.PG_DATABASE,
-  process.env.PG_USER,
-  process.env.PG_PASSWORD,
-  {
-    host: process.env.PG_HOST, // 🔥 Menggunakan PG_HOST
-    dialect: "postgres",
-    logging: false,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  }
-);
+// 🔥 PERBAIKAN UTAMA: Gunakan DATABASE_URL dan HAPUS konfigurasi SSL
+// DATABASE_URL adalah variabel yang disediakan otomatis oleh Railway
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  logging: false,
+  // Hapus dialectOptions SSL yang menyebabkan ECONNREFUSED di koneksi internal Railway
+});
 
 // INIT MODELS (Gunakan const, HAPUS 'export' di sini)
 const User = userModel(sequelize, DataTypes);
@@ -44,7 +34,7 @@ Comment.belongsTo(User, { foreignKey: "user_id" });
 Post.hasMany(Comment, { foreignKey: "post_id", onDelete: "CASCADE" });
 Comment.belongsTo(Post, { foreignKey: "post_id" });
 
-// 🔥 EKSPOR AKHIR (Memperbaiki error duplikasi dan no default export)
+// EKSPOR AKHIR
 export {
   sequelize,
   User,
