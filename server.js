@@ -2,6 +2,10 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
+
+dotenv.config();
+
+
 import { sequelize } from "./src/models/index.js";
 
 // Routes
@@ -10,8 +14,6 @@ import characterRoutes from "./src/routes/characterRoutes.js";
 import weaponRoutes from "./src/routes/weaponRoutes.js";
 import postRoutes from "./src/routes/postRoutes.js";
 import commentRoutes from "./src/routes/commentRoutes.js";
-
-dotenv.config();
 
 const app = express();
 

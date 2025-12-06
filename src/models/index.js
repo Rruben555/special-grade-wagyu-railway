@@ -7,7 +7,6 @@ import weaponModel from "./weapon.js";
 import postModel from "./post.js";
 import commentModel from "./comment.js";
 
-dotenv.config();
 
 export const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
