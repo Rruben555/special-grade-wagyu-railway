@@ -1,9 +1,12 @@
 import express from "express";
-import db from "../models/index.js";
+// 🔥 Perbaikan: Import fungsi inisialisasi
+import { initializeDatabase } from "../models/index.js"; 
 import { protect } from "../middleware/authMiddleware.js";
 
+// 🔥 Panggil fungsi di level teratas untuk mendapatkan model
+const { Post, User, Comment } = initializeDatabase();
+
 const router = express.Router();
-const { Post, User, Comment } = db;
 
 // GET all posts
 router.get("/", async (req, res) => {

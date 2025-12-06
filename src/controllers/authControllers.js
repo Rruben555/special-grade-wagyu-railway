@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
-import { User } from "../models/index.js";
+import { initializeDatabase } from "../models/index.js";
 import generateToken from "../utils/generateToken.js";
-
+const { User } = initializeDatabase();
 export const register = async (req, res) => {
   // 1. Cek apakah request masuk
   console.log("Request Register Masuk:", req.body); 

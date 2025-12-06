@@ -1,30 +1,35 @@
 import { Sequelize, DataTypes } from "sequelize";
 
+// Import model definitions
 import userModel from "./user.js";
 import characterModel from "./character.js";
 import weaponModel from "./weapon.js";
 import postModel from "./post.js";
 import commentModel from "./comment.js";
 
-// Variabel untuk menyimpan instance setelah diinisialisasi
+// Variabel untuk menyimpan instance dan models setelah diinisialisasi
 let sequelizeInstance = null;
 let Models = {}; 
 
-// 🔥 Fungsi untuk inisialisasi yang tertunda (Deferred Initialization)
+/**
+ * Menginisialisasi Sequelize dan Models. Aman dipanggil berkali-kali.
+ * @returns {object} Objek berisi instance sequelize dan semua Models.
+ */
 export function initializeDatabase() {
-  // Jika sudah diinisialisasi, kembalikan yang sudah ada
+  // Cek jika sudah diinisialisasi untuk mencegah pemrosesan ulang
   if (sequelizeInstance) return { sequelize: sequelizeInstance, ...Models };
 
-  // 1. Inisialisasi Sequelize HANYA di dalam fungsi ini
+  // Verifikasi lingkungan sebelum inisialisasi
   if (!process.env.DATABASE_URL) {
-      console.error("❌ DATABASE_URL is not defined.");
+      console.error("❌ FATAL: DATABASE_URL is not defined in environment variables.");
       throw new Error("Cannot initialize Sequelize: DATABASE_URL is undefined.");
   }
   
+  // 1. Inisialisasi Sequelize HANYA di dalam fungsi ini
   sequelizeInstance = new Sequelize(process.env.DATABASE_URL, {
     dialect: "postgres",
     logging: false,
-    // Menghapus blok dialectOptions/SSL yang menyebabkan konflik di Railway
+    // Blok dialectOptions/SSL dihapus untuk koneksi internal Railway
   });
 
   // 2. Inisialisasi Model
@@ -44,12 +49,11 @@ export function initializeDatabase() {
   Post.hasMany(Comment, { foreignKey: "post_id", onDelete: "CASCADE" });
   Comment.belongsTo(Post, { foreignKey: "post_id" });
 
-  // 4. Simpan model dan instance sequelize
+  // 4. Simpan dan kembalikan model
   Models = { User, Character, Weapon, Post, Comment };
   return { sequelize: sequelizeInstance, ...Models };
 }
 
-// Ekspor hanya fungsi inisialisasi
 export default {
   initializeDatabase
 };

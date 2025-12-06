@@ -1,6 +1,8 @@
 import express from "express";
-import { Weapon } from "../models/index.js";
+import { initializeDatabase } from "../models/index.js";
 import { protect } from "../middleware/authMiddleware.js";
+
+const { Weapon } = initializeDatabase();
 
 const router = express.Router();
 

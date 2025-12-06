@@ -31,10 +31,12 @@
 
 // backend/src/routes/commentRoutes.js
 import express from "express";
-import db from "../models/index.js";
-
-const { Comment } = db;
+// 🔥 Perbaikan: Import fungsi inisialisasi
+import { initializeDatabase } from "../models/index.js"; 
 import { protect } from "../middleware/authMiddleware.js";
+
+// 🔥 Panggil fungsi di level teratas untuk mendapatkan model
+const { Comment } = initializeDatabase();
 const router = express.Router();
 
 router.put("/:commentId", protect, async (req, res) => {
