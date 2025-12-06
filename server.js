@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 
+dotenv.config();
 // Routes
 import authRoutes from "./src/routes/auth.js";
 import characterRoutes from "./src/routes/characterRoutes.js";
@@ -10,8 +11,6 @@ import weaponRoutes from "./src/routes/weaponRoutes.js";
 import postRoutes from "./src/routes/postRoutes.js";
 import commentRoutes from "./src/routes/commentRoutes.js";
 
-// 🔥 Panggil dotenv.config() SEBELUM import sequelize
-dotenv.config();
 
 // 🔥 Import HANYA fungsi initializeDatabase
 import { initializeDatabase } from "./src/models/index.js";
