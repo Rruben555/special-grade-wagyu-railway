@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models/index.js";
+import { initializeDatabase } from "../models/index.js";
+const { User } = initializeDatabase();
 
 export const protect = async (req, res, next) => {
   try {
