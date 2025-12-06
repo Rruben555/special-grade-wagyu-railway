@@ -3,10 +3,11 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 
+// 🔥 Panggil dotenv.config() SEBELUM import sequelize
 dotenv.config();
 
-
-import { sequelize } from "./src/models/index.js";
+// 🔥 Import HANYA fungsi initializeDatabase
+import { initializeDatabase } from "./src/models/index.js";
 
 // Routes
 import authRoutes from "./src/routes/auth.js";
@@ -15,15 +16,18 @@ import weaponRoutes from "./src/routes/weaponRoutes.js";
 import postRoutes from "./src/routes/postRoutes.js";
 import commentRoutes from "./src/routes/commentRoutes.js";
 
+// 🔥 Langkah Kritis: Panggil fungsi untuk menginisialisasi Sequelize dan Models
+const { sequelize, User, Character, Weapon, Post, Comment } = initializeDatabase();
+
 const app = express();
 
-// CORS — hanya lokal + railway
+// CORS — hanya lokal + environment variable
 const allowedOrigins = [
-  "http://localhost:3000",  // React dev
+  "http://localhost:3000",  // React dev
   "http://localhost:4000",
   "http://localhost:8080",
-  "http://localhost:5173",  // Vite dev
-  process.env.FRONTEND_URL, // kalau nanti deploy frontend ke vercel
+  "http://localhost:5173",  // Vite dev
+  process.env.FRONTEND_URL, // URL live Vercel/lainnya
 ];
 
 const corsOptions = {
@@ -52,6 +56,7 @@ const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, async () => {
   try {
+    // Koneksi sequelize akan berfungsi karena inisialisasi sudah terjadi
     await sequelize.authenticate();
     console.log("✅ Connected to PostgreSQL");
 
